@@ -3,3 +3,13 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+- Initial release of
+  [`@hugsmidjan/qj/kennitala`](https://github.com/hugsmidjan/qj/blob/ff4ed876/src/utils/kennitala.ts)
+  as a standalone micro library, with the following changes/additions:
+  - tests: Convert tests to use `bun:test`
+  - docs: Add proper README, and trim JSDoc comments and link to README for
+    details
+  - feat: Simplify signature of `generateKennitala`
+  - feat: Set 1969 as the lowest founding year for generated company
+    kennitalas.
+  - perf: Speed up the `KennitalaData.format` method
