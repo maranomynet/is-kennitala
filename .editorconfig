@@ -1,0 +1,22 @@
+# __hxmstyle__
+# This file is managed by "hxmstyle" and will be rewritten on next install/update.
+# Place your project specific rules BELOW the `__project_specific_rules__` marker.
+# -------------------------------------------------------------------------------------------
+root = true
+
+[*]
+end_of_line = lf
+indent_style = space
+indent_size = 2
+max_line_length = 90
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+quote_type = single
+
+[*.{md,markdown}]
+max_line_length = 78
+trim_trailing_whitespace = false
+
+# -------------------------------------------------------------------------------------------
+# __project_specific_rules__  Anything ABOVE this point will be automatically wiped/rewritten.

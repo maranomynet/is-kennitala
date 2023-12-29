@@ -1,0 +1,48 @@
+{
+  "name": "is-kennitala",
+  "version": "1.0.0",
+  "description": "Small, robust and type-safe Icelandic kennitala parsing/handling library.",
+  "devDependencies": {
+    "@hugsmidjan/hxmstyle": "^8.4.0",
+    "@reykjavik/hanna-utils": "^0.2.13",
+    "@types/bun": "latest",
+    "eslint": "^8.56.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.3.3"
+  },
+  "private": true,
+  "engines": {
+    "bun": "1.0.20",
+    "node": "9999. Please use bun",
+    "npm": "9999. Please use bun"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "bun test --watch",
+    "prepublishOnly": "echo \"\nRun 'bun run publish:lib' to publish this package\n\n\"  &&  exit 1",
+    "publish:lib": "bun run build  &&  bun npm-publish.ts",
+    "build": "bun test  &&  bun build.ts",
+    "test": "bun test"
+  },
+  "hxmstyle": {
+    "options": {
+      "typescript": true
+    }
+  },
+  "dist_package_json": {
+    "type": null,
+    "private": null,
+    "scripts": null,
+    "devDependencies": null,
+    "hxmstyle": null,
+    "engines": null,
+    "sideEffects": false,
+    "main": "index.ts",
+    "exports": {
+      ".": {
+        "import": "./esm/index.js",
+        "require": "./index.js"
+      }
+    }
+  }
+}
