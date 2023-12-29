@@ -6,7 +6,7 @@
 
 ## 1.0.0
 
-_2023-12-30_
+_2023-12-29_
 
 - Initial release of
   [`@hugsmidjan/qj/kennitala`](https://github.com/hugsmidjan/qj/blob/ff4ed876/src/utils/kennitala.ts)

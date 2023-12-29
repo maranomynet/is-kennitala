@@ -574,4 +574,5 @@ PRs are welcoms!
 
 ## Change Log
 
-See [CHANGELOG.md](./CHANGELOG.md)
+See
+[CHANGELOG.md](https://github.com/maranomynet/is-kennitala/blob/dev/CHANGELOG.md)
