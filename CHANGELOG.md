@@ -3,6 +3,11 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+
+## 1.0.0
+
+_2023-12-30_
+
 - Initial release of
   [`@hugsmidjan/qj/kennitala`](https://github.com/hugsmidjan/qj/blob/ff4ed876/src/utils/kennitala.ts)
   as a standalone micro library, with the following changes/additions:
