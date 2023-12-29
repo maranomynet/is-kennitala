@@ -1,20 +1,41 @@
 declare const _KennitalaPerson__Brand: unique symbol;
-/** A valid 10-digit Kennitala string for a person */
+/**
+ * A valid 10-digit Kennitala string for a person.
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#branded-kennitala-types
+ */
 export type KennitalaPerson = string & { [_KennitalaPerson__Brand]: true };
 
 declare const _KennitalaCompany__Brand: unique symbol;
-/** A valid 10-digit Kennitala string for a person */
+/**
+ * A valid 10-digit Kennitala string for a person.
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#branded-kennitala-types
+ */
 export type KennitalaCompany = string & { [_KennitalaCompany__Brand]: true };
 
-/** A valid 10-digit Kennitala string */
+/**
+ * A valid 10-digit Kennitala string.
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#branded-kennitala-types
+ */
 export type Kennitala = KennitalaPerson | KennitalaCompany;
 
 declare const _KennitalaTemporary__Brand: unique symbol;
-/** A valid 10-digit Kennitala string for a person with a temporary "Kerfiskennitala" */
+/**
+ * A valid 10-digit Kennitala string for a person with a temporary "Kerfiskennitala".
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#branded-kennitala-types
+ */
 export type KennitalaTemporary = KennitalaPerson & { [_KennitalaTemporary__Brand]: true };
 
 // ---------------------------------------------------------------------------
 
+/**
+ * The two types of kennitalas: "person" and "company".
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#type-kennitalatype
+ */
 export type KennitalaType = 'person' | 'company';
 
 // ---------------------------------------------------------------------------
@@ -23,21 +44,7 @@ export type KennitalaType = 'person' | 'company';
  * Trims the string and then only removes spaces and/or a dash (or en-dash)
  * before the last four of the ten digits.
  *
- * Defaults to returning the (trimmed) original string, if the pattern
- * doesn't match.
- *
- * Cleaned:
- *  * `' 123456-7890'` ==> `'1234567890'`
- *  * `'123456 7890 '` ==> `'1234567890'`
- *  * `' 123456 - 7890'` ==> `'1234567890'`
- *  * `'123456 -7890'` ==> `'1234567890'`
- *
- * Only trimmed:
- * 	* `' abc '` ==> `'abc'`
- *  * `' 123456   - 7890'` ==> `'123456   - 7890'`
- * 	* `'kt. 123456-7890'` ==> `'kt. 123456-7890'`
- * 	* `' 1234-567890'` ==> `'1234-567890'`
- * 	* `'123 456-7890'` ==> `'123 456-7890'`
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#cleankennitalacareful
  */
 export const cleanKennitalaCareful = (value: string): string =>
   value.trim().replace(/^(\d{6})\s?[-–]?\s?(\d{4})$/, '$1$2');
@@ -45,19 +52,10 @@ export const cleanKennitalaCareful = (value: string): string =>
 // ---------------------------------------------------------------------------
 
 /**
- * Aggressively strips away all spaces and dashes (or en-dashes) from the string,
- * as well as any trailing and leading non-digit gunk.
+ * Aggressively strips away ALL spaces and dashes (or en-dashes) from the
+ * string, as well as any trailing and leading non-digit gunk.
  *
- * Returns whatever is left.
- *
- * Examples:
- *  * `' abc '` ==> `''`
- *  * `'(kt. 123456-7890)'` ==> `'1234567890'`
- *  * `'(kt. 123456-7890, s. 765 4321) '` ==> `'1234567890,s.7654321'`
- *  * `'(tel. 123-4567, 765-4321)'` ==> `'1234567,7654321'`
- *  * `'(s. 765 4321) '` ==> `'7654321'`
- *  * `' 12 34 56 - 78 90'` ==> `'1234567890'`
- *  * `'1-2-3 4-5 6-7-8 9-0'` ==> `'1234567890'`
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#cleankennitalaaggressive
  */
 export const cleanKennitalaAggressive = (value: string): string =>
   value
@@ -77,10 +75,12 @@ const format = (ktShaped: string, separator = '-') =>
 
 /**
  * Runs minimal cleanup on the input string and if it looks like a kennitala
- * then then inserts a nice separator (default `'-'`) before the last four
+ * then then inserts a nice separator (`'-'` by default) before the last four
  * digits.
  *
- * Defaults to returning the input untouched.
+ * Falls back to returning the input untouched, if it isn't roughly "kennitala-shaped".
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#formatkennitala
  */
 export const formatKennitala = (value: string, separator = '-') => {
   const cleaned = cleanIfKtShaped(value);
@@ -93,12 +93,15 @@ export const formatKennitala = (value: string, separator = '-') => {
 // ---------------------------------------------------------------------------
 
 /**
- * Returns the (UTC) birth-date (or founding-date) of a "kennitala-shaped" string
- * ...without checking if it is a valid kennitala.
+ * Returns the (UTC) birth-date (or founding-date) of a roughly
+ * "kennitala-shaped" string — **without** checking if it is a valid
+ * `Kennitala`.
  *
  * It returns `undefined` for malformed (non-kennitala shaped) strings,
- * temporary "kerfiskennitalas" and kennitalas with nonsensical dates, even if
- * they're numerically valid.
+ * temporary "kerfiskennitalas" and kennitalas with nonsensical dates,
+ * even if they're otherwise numerically valid.
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#getkennitalabirthdate
  */
 export const getKennitalaBirthDate = (value: string): Date | undefined => {
   const cleaned = cleanIfKtShaped(value);
@@ -143,36 +146,44 @@ type KennitalaParsingOptions<
    *
    * Defaults to `false`
    *
-   * BTW, Rationale for the "on by default" behavior:
+   * BTW, Rationale for this "on by default" behavior:
+   * - "Kerfiskennitalas" are, by definition, **valid** kennitalas.
    * - These are kennitalas of actual people, not some fake "Gervimaður".
-   * - "Kerfiskennitalas" are, by definition, perfectly **valid** kennitalas.
-   * - This is a simple helper library, whose purpose is only to catch obvious
-   *   mistakes and show error messages fast.
-   * - Any real stakes filtering (including for age) should/must occur
+   * - This is a low-stakes library, with the simple purpose of catching
+   *   obvious mistakes and show error messages fast.
+   * - Any real-stakes filtering (including for age, etc.) should/must occur
    *   in the next step anyway.
    */
   rejectTemporary?: boolean;
   /**
-   * `"aggressive"` mode strips away all spaces and dashes and throws away any
+   * Controls how much to clean up the input string before parsing it.
+   *
+   * - `"aggressive"` mode strips away ALL spaces and dashes, and throws away any
    * leading/trailing gunk.
    *
-   * `false`/`"none"` performs no cleanup whatsoever, not even trimming.
-   *
-   * Default is `"careful"` mode, which performs only minimal cleaning on the
+   * - Default is `"careful"` mode, which performs only minimal cleaning on the
    * incoming string ...trimming it and then removing a space and/or dash
    * right before the last four of the ten digits.
+   * - `false`/`"none"` instructs the parser to perform no cleanup whatsoever,
+   * not even trimming.
    */
   clean?: 'aggressive' | 'careful' | 'none' | false;
   /**
-   * Set this flag to `true` to opt into a slower, more perfect
+   * Set this flag to `true` to opt into a slower, but more perfect
    * check for valid dates in permanent (non-"Kerfiskennitala") kennitalas.
    *
    * Defaults to `false` — which may result in the occational false-positive
-   * on values starting with something impossible like "3102" (Feb. 31st)
+   * on values starting with something impossible like "3102…" (Feb. 31st)
    */
   strictDate?: boolean;
 };
 
+/**
+ * The data object returned by `parseKennitala()` if the input was a person
+ * (non-company) kennitala.
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#type-kennitaladata
+ */
 export type KennitalaDataPerson<PossiblyRobot extends boolean = false> = {
   /** The plain, cleaned-up 10 digit kennitala string */
   value: KennitalaPerson;
@@ -187,6 +198,12 @@ export type KennitalaDataPerson<PossiblyRobot extends boolean = false> = {
   toString(): string;
 };
 
+/**
+ * The data object returned by `parseKennitala()` if the input was a company
+ * kennitala.
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#type-kennitaladata
+ */
 export type KennitalaDataCompany = {
   /** The plain, cleaned-up 10 digit kennitala string */
   value: KennitalaCompany;
@@ -201,6 +218,14 @@ export type KennitalaDataCompany = {
   toString(): string;
 };
 
+/**
+ * This is type of the data object returned by `parseKennitala()`.
+ *
+ * It contains the cleaned-up (and branded) kennitala value, as well as
+ * information about it's type and other properties.
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#type-kennitaladata
+ */
 export type KennitalaData<
   KtType extends KennitalaType = KennitalaType,
   PossiblyRobot extends boolean = boolean
@@ -227,7 +252,7 @@ function toString(this: { value: string }) {
 const converters = (value: string) => ({
   toString,
   get formatted() {
-    return formatKennitala(value);
+    return format(value);
   },
 });
 
@@ -236,7 +261,9 @@ const converters = (value: string) => ({
  * and if so, it returns a data object with the cleaned up value
  * along with some meta-data and pretty-formatted version.
  *
- * If the parsing/validation fails, it simply returns `undefined`
+ * If the parsing/validation fails, it simply returns `undefined`.
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#parsekennitala
  */
 export function parseKennitala(
   // This is here just to trick TS into providing full IntelliSense
@@ -344,8 +371,10 @@ export function parseKennitala<
  * Runs the input through `parseKennitala` and returns `true` if the parsing
  * was successful.
  *
- * Options are the same as for `parseKennitala` except that `clean` option
+ * Options are the same as for `parseKennitala`, except that `clean` option
  * defaults to `"none"`.
+ *
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#isvalidkennitala
  */
 export function isValidKennitala(
   // This is here just to trick TS into providing full IntelliSense
@@ -378,75 +407,27 @@ export function isValidKennitala(value: string, opts?: KennitalaParsingOptions):
 // ---------------------------------------------------------------------------
 
 /**
- * Detects if an input `Kennitala` is `KennitalaPerson`.
+ * Quickly detects if an already parsed input `Kennitala` is `KennitalaPerson`.
  *
- * Assumes that the input `kt` is already validated as `Kennitala`
- * and performs no internal validation, and is thus insanely fast, but
- * unreliable for random strings.
- *
- * To safely check the type of a plain, non-validated `string` input,
- * use `parseKennitala` and check the `.type` of the retured data object.
- *
- * That way you can also get a cleaned-up version of the kennitala.
- *
- * Example:
- *
- * ```js
- * const isPerson = parseKennitala(someString)?.type === 'person';
- * ```
- * ...or...
- * ```js
- * const isPerson = !!parseKennitala(someString, { type: 'person' });
- * ```
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#kennitala-discriminators
  */
 export const isPersonKennitala = (kennitala: Kennitala): kennitala is KennitalaPerson =>
   // Temporary "kerfiskenntalas" for people start with 8 or 9
   /^[012389]/.test(kennitala);
 
 /**
- * Detects if an input `Kennitala` is `KennitalaCompany`.
+ * Quickly detects if an already parsed input `Kennitala` is `KennitalaCompany`.
  *
- * Assumes that the input `kt` is already validated as `Kennitala`
- * and performs no internal validation, and is thus insanely fast, but
- * unreliable for random strings.
- *
- * To safely check the type of a plain, non-validated `string` input,
- * use `parseKennitala` and check the `.type` of the retured data object.
- *
- * That way you can also get a cleaned-up version of the kennitala.
- *
- * Example:
- *
- * ```js
- * const isCompany = parseKennitala(someString)?.type === 'company';
- * ```
- * ...or...
- * ```js
- * const isCompany = !!parseKennitala(someString, { type: 'company' });
- * ```
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#kennitala-discriminators
  */
 export const isCompanyKennitala = (kennitala: Kennitala): kennitala is KennitalaCompany =>
   /^[4567]/.test(kennitala);
 
 /**
- * Detects if an input `Kennitala` is a (temporary) "kerfiskennitala"
- * (a subset of valid `KennitalaPerson`s).
+ * Quickly detects if an already parsed input `Kennitala` is a (temporary)
+ * "kerfiskennitala" (a subset of valid `KennitalaPerson`s).
  *
- * Assumes that the input `kt` is already validated as `Kennitala`
- * and performs no internal validation, and is thus insanely fast, but
- * unreliable for random strings.
- *
- * To safely check the type of a plain, non-validated `string` input,
- * use `parseKennitala` and check the `.temporary` status of the
- * retured data object.
- *
- * That way you can also get a cleaned-up version of the kennitala.
- *
- * Example:
- *
- * ```js
- * const isTemp = !!parseKennitala(someString)?.temporary;
- * ```
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#kennitala-discriminators
  */
 export const isTempKennitala = (kennitala: Kennitala): kennitala is KennitalaTemporary =>
   /^[89]/.test(kennitala);
@@ -461,13 +442,10 @@ type GenerateOptions = {
 };
 
 /**
- * Generates a technically valid Kennitala. (Possibly a real one!)
+ * Generates a technically valid `Kennitala`. (Possibly a real one!)
  *
- * Defaults to making a KennitalaPerson, unless `opts.type` is set to `"company"`.
- *
- * Picks a birth date at random, unless a valid `opts.birthDate` is provided.
+ * @see https://github.com/maranomynet/is-kennitala/tree/v1#generatekennitala
  */
-export function generateKennitala(opts: GenerateCompanyOptions): KennitalaCompany;
 export function generateKennitala(
   opts: GenerateOptions & { type: 'company' }
 ): KennitalaCompany;
