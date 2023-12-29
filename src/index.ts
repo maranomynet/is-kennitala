@@ -72,6 +72,9 @@ const cleanIfKtShaped = (value: string): string | undefined => {
   return cleaned.length === 10 && !/\D/.test(cleaned) ? cleaned : undefined;
 };
 
+const format = (ktShaped: string, separator = '-') =>
+  ktShaped.slice(0, 6) + separator + ktShaped.slice(6);
+
 /**
  * Runs minimal cleanup on the input string and if it looks like a kennitala
  * then then inserts a nice separator (default `'-'`) before the last four
@@ -84,7 +87,7 @@ export const formatKennitala = (value: string, separator = '-') => {
   if (!cleaned) {
     return value;
   }
-  return cleaned.slice(0, 6) + separator + cleaned.slice(6);
+  return format(cleaned, separator);
 };
 
 // ---------------------------------------------------------------------------
@@ -97,7 +100,7 @@ export const formatKennitala = (value: string, separator = '-') => {
  * temporary "kerfiskennitalas" and kennitalas with nonsensical dates, even if
  * they're numerically valid.
  */
-export const getKennitalaBirthDate = (value: string) => {
+export const getKennitalaBirthDate = (value: string): Date | undefined => {
   const cleaned = cleanIfKtShaped(value);
   if (!cleaned || /^[89]/.test(cleaned)) {
     return;
@@ -364,10 +367,7 @@ export function isValidKennitala<O extends { clean?: 'none' | false }>(
 ): value is Kennitala;
 export function isValidKennitala(value: string, opts?: KennitalaParsingOptions): boolean;
 
-export function isValidKennitala(
-  value: string,
-  opts?: KennitalaParsingOptions
-): value is Kennitala {
+export function isValidKennitala(value: string, opts?: KennitalaParsingOptions): boolean {
   return !!parseKennitala(value, {
     ...opts,
     // make "clean: false" the default when validating
@@ -453,17 +453,11 @@ export const isTempKennitala = (kennitala: Kennitala): kennitala is KennitalaTem
 
 // ---------------------------------------------------------------------------
 
-type GeneratePersonOptions = {
-  type?: 'person';
+type GenerateOptions = {
+  type?: KennitalaType;
   birthDate?: Date;
   robot?: boolean;
   temporary?: boolean;
-};
-type GenerateCompanyOptions = {
-  type: 'company';
-  birthDate?: Date;
-  robot?: false;
-  temporary?: false;
 };
 
 /**
@@ -475,16 +469,18 @@ type GenerateCompanyOptions = {
  */
 export function generateKennitala(opts: GenerateCompanyOptions): KennitalaCompany;
 export function generateKennitala(
-  opts: GeneratePersonOptions & { temporary: true }
+  opts: GenerateOptions & { type: 'company' }
+): KennitalaCompany;
+export function generateKennitala(
+  opts: GenerateOptions & { temporary: true }
 ): KennitalaTemporary;
-export function generateKennitala(opts?: GeneratePersonOptions): KennitalaPerson;
 export function generateKennitala(
-  opts?: GeneratePersonOptions | GenerateCompanyOptions
-): Kennitala;
+  opts?: GenerateOptions & { type?: 'person' }
+): KennitalaPerson;
+export function generateKennitala(opts?: GenerateOptions): Kennitala;
 
-export function generateKennitala(
-  opts: GeneratePersonOptions | GenerateCompanyOptions = {}
-): Kennitala {
+// eslint-disable-next-line complexity
+export function generateKennitala(opts: GenerateOptions = {}): Kennitala {
   const { random, floor } = Math;
   const isCompany = opts.type === 'company';
   if (!isCompany) {
@@ -503,12 +499,14 @@ export function generateKennitala(
   if (
     !bDay ||
     isNaN(bDay.getTime()) ||
-    // Treat dates outside of the 1800-2099 range as invalid
-    bDay < new Date('1800-01-01') ||
+    // Treat dates outside of the 1800-2099 range as invalid.
+    // Real company kennitalas happen to have a lower year-boundry of 1969.
+    bDay < new Date(isCompany ? '1969-01-01' : '1800-01-01') ||
     bDay >= new Date('2100-01-01')
   ) {
     const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
-    bDay = new Date(Date.now() - floor(random() * 100 * YEAR_MS));
+    const maxAge = (isCompany ? 50 : 100) * YEAR_MS;
+    bDay = new Date(Date.now() - floor(random() * maxAge));
   }
 
   const dateModifier = isCompany ? 40 : 0;

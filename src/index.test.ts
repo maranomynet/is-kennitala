@@ -496,6 +496,8 @@ describe('getKennitalaBirthDate', () => {
     expect(p1BDay?.toISOString().substring(0, 10)).toBe('1975-12-10');
     const pABDay = getKennitalaBirthDate(ktPersonAncient);
     expect(pABDay?.toISOString().substring(0, 10)).toBe('1875-12-10');
+    const pRBDay = getKennitalaBirthDate(ktGervi);
+    expect(pRBDay?.toISOString().substring(0, 10)).toBe('1930-01-01');
     const p2BDay = getKennitalaBirthDate(kt_Person1);
     expect(p2BDay?.toISOString().substring(0, 10)).toBe('1975-12-10');
     const cBDay = getKennitalaBirthDate(kt_Company);
@@ -552,28 +554,20 @@ describe('generateKennitala', () => {
     });
   }
 
-  {
-    type CompOpts = Parameters<typeof generateKennitala>[0] & { type: 'company' };
-
-    test('opts.type overrides other flags, including opts.robot', () => {
-      const conflictingOpts1: CompOpts = {
-        type: 'company',
-        // @ts-expect-error  (Testing invalid input)
-        robot: true,
-      };
-      const ktComp1: KennitalaCompany = generateKennitala(conflictingOpts1);
-      expect(isValidKennitala(ktComp1, { type: 'company' })).toBe(true);
+  test('opts.type overrides opts.robot', () => {
+    const ktComp1: KennitalaCompany = generateKennitala({
+      type: 'company',
+      robot: true,
     });
-    test('opts.type overrides other flags, including opts.temporary', () => {
-      const conflictingOpts2: CompOpts = {
-        type: 'company',
-        // @ts-expect-error  (Testing invalid input)
-        temporary: true,
-      };
-      const ktComp2: KennitalaCompany = generateKennitala(conflictingOpts2);
-      expect(isValidKennitala(ktComp2, { type: 'company' })).toBe(true);
+    expect(isValidKennitala(ktComp1, { type: 'company' })).toBe(true);
+  });
+  test('opts.type overrides opts.temporary', () => {
+    const ktComp2: KennitalaCompany = generateKennitala({
+      type: 'company',
+      temporary: true,
     });
-  }
+    expect(isValidKennitala(ktComp2, { type: 'company' })).toBe(true);
+  });
 
   test('accepts a custom birthdate', () => {
     const kt1: KennitalaPerson = generateKennitala({ birthDate: new Date('2001-07-10') });
@@ -611,9 +605,14 @@ describe('generateKennitala', () => {
 
     const ktFuture = generateKennitala({ birthDate: new Date('2100-01-01') });
     const ktAncient = generateKennitala({ birthDate: new Date('1799-12-31') });
+    const ktAncientCompany = generateKennitala({
+      type: 'company',
+      birthDate: new Date('1950-06-17'),
+    });
 
     expect(makeKtStable(ktFuture) === '010100___1').toBe(false);
     expect(makeKtStable(ktAncient) === '311299___8').toBe(false);
+    expect(makeKtStable(ktAncientCompany) === '170650___9').toBe(false);
   });
 });
 
