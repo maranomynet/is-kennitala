@@ -13,6 +13,5 @@
     "noImplicitAny": true,
     "useUnknownInCatchVariables": true
   },
-  "exclude": ["node_modules", "_npm-lib"],
-  // "include": ["**/*.ts", "**/*.tsx"]
+  "exclude": ["node_modules", "_npm-lib"]
 }
