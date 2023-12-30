@@ -3,6 +3,7 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+- docs: Minor fixes/improvements to README and JSDoc comments
 
 ## 1.0.0 – 1.0.1
 

@@ -1,9 +1,11 @@
 # `is-kennitala`
 
-Small, robust and type-safe Icelandic kennitala parsing/handling library.
+Small, robust, type-safe and fast Icelandic kennitala parsing/handling
+library.
 
-(BTW: "Kennitalas" are the Icelandic national identification numbers assigned
-to both private individuals and legal entities).
+> [!TIP]  
+> "Kennitalas" are the Icelandic national ids assigned to both private
+> individuals and legal entities.
 
 ```
 npm install is-kennitala
@@ -48,7 +50,7 @@ It's philosophy and main features are:
   returns a helpful data object with a cleaned kennitala "value".
 - Make the "input-cleanup"/"gunk-acceptance" levels sensibly _careful_ by
   default, with optional aggressiveness.
-- Provide good developer ergonomics, while promoting good validation
+- Provide good developer ergonomics, while promoting good, type-safe coding
   practices.
 - Provide has first-class TypeScript signatures (including "branded types",
   which happen to play very nicely with `zod`, etc.)
@@ -71,10 +73,10 @@ It's philosophy and main features are:
 
 Parses a string value to see if may be a technically valid kennitala, and if
 so, it returns a [`KennitalaData`](#type-kennitaladata) object with the
-cleaned up (and [branded](#branded-kennitala-types)) kennitala value along
+cleaned up (and [branded](#branded-kennitala-types)!) kennitala value along
 with some basic meta-data and a pretty-formatted version.
 
-If the parsing/validation fails, it simply returns `undefined`.
+If the parsing/validation fails, it returns `undefined`.
 
 ```ts
 import { parseKennitala } from 'is-kennitala';
@@ -82,14 +84,15 @@ import { parseKennitala } from 'is-kennitala';
 const personKtInput: string = ' 081153-6049';
 const companyKtInput: string = '530269 – 7609 ';
 const robotKtInput: string = ' 010130-2989';
+const kerfisKtInput: string = '812345-6793';
 
 // Does some minor trimming/cleaning:
 const ktData = parseKennitala(personKtInput);
-console.log(ktData.value); // '0101302989'
+console.log(ktData.value); // '0811536049'
 console.log(ktData.type); // 'person'
 console.log(ktData.robot); // true
 console.log(ktData.temporary); // false
-console.log(ktData.formatted); // '010130-2989'
+console.log(ktData.formatted); // '081153-6049'
 
 const ktData1 = parseKennitala(companyKtInput);
 console.log(ktData1.value); // '5302697609'
@@ -111,39 +114,39 @@ const ktData4 = parseKennitala(companyKtInput, { type: 'person' });
 // Returns: undefined
 
 // Reject personal kennitalas:
-const ktData4 = parseKennitala(personKtInput, { type: 'company' });
+const ktData5 = parseKennitala(personKtInput, { type: 'company' });
 // Returns: undefined
 
 // Reject robot ("Gervimaður") kennitalas by default:
-const ktData5 = parseKennitala('010130-2989');
+const ktData6 = parseKennitala(robotKtInput);
 // Returns: undefined
 
 // Opt-in to accepting robot kennitalas:
-const ktData6 = parseKennitala('010130-2989', { robot: true });
+const ktData7 = parseKennitala(robotKtInput, { robot: true });
 // Returns: `KennitalaData`
 
 // Opt-out of accepting temporary "Kerfiskennitala":
-const ktData7 = parseKennitala('8123456793', { rejectTemporary: true });
+const ktData8 = parseKennitala(kerfisKtInput, { rejectTemporary: true });
 // Returns: undefined
 ```
 
 #### `KennitalaParsingOptions`
 
-**`type?: KennitalaType`**
+**`type`**`?: KennitalaType`
 
-Set this to `"person"` or `"company"` to limit the check to only either
+Set this to `"person"` or `"company"` to limit the validation to only either
 private persons or legal entities.
 
-Default: `undefined` (accepts both)
+Default: `undefined` (allows both)
 
-**`robot?: boolean`**
+**`robot`**`?: boolean`
 
 Set this to `true` if the parser should accept known "Gervimaður" kennitalas
 (only used for mocking or systems-testing).
 
 Default: `false`
 
-**`rejectTemporary?: boolean`**
+**`rejectTemporary`**`?: boolean`
 
 Set this to `true` to reject short-term temporary kennitalas
 ("kerfiskennitala") given to short-stay (or no-stay) individuals/workers.
@@ -159,25 +162,25 @@ Why are temporary kennitalas accepted by default?
 - Any real-stakes filtering (including for age, etc.) should/must occur in the
   next step anyway.
 
-**`clean?: 'aggressive' | 'careful' | 'none' | false;`**
+**`clean`**`?: 'careful' | 'aggressive' | 'none' | false;`
 
 Controls how much to clean up the input string before parsing it.
 
+- Default is [`"careful"`](#cleankennitalacareful) mode, which performs only
+  minimal cleaning on the incoming string ...trimming it and then removing a
+  space and/or dash right before the last four of the ten digits.
 - [`"aggressive"`](#cleankennitalaaggressive) mode strips away ALL spaces and
   dashes, and throws away any leading/trailing gunk.
 - `false`/`"none"` instructs the parser to perform no cleanup whatsoever, not
   even trimming.
-- Default is [`"careful"`](#cleankennitalacareful) mode, which performs only
-  minimal cleaning on the incoming string ...trimming it and then removing a
-  space and/or dash right before the last four of the ten digits.
 
-**`strictDate?: boolean`**
+**`strictDate`**`?: boolean`
 
 Set this flag to `true` to opt into a slower, but more perfect check for valid
 dates in permanent (non-"Kerfiskennitala") kennitalas.
 
 Defaults to `false` — which may result in the occational false-positive on
-values starting with something impossible like "3102…" (Feb. 31st)
+values starting with something subtly impossible like "3102…" (Feb. 31st).
 
 ---
 
@@ -215,8 +218,9 @@ isValidKennitala(robotKtInput, { robot: true }); // true
 // etc...
 ```
 
-**NOTE** that more often than not, you'll want to use `parseKennitala`
-instead, to get the cleaned-up, branded value and other meta-data goodies.
+**NOTE:** More often than not, you'll want to use
+[`parseKennitala`](#parsekennitala) instead, to get the cleaned-up, branded
+value and other meta-data goodies.
 
 ---
 
@@ -226,8 +230,8 @@ The library also exports a set of fast type-guarding functions for valid
 kennitalas: `isPersonKennitala`, `isCompanyKennitala`, `isTempKennitala`
 
 All of these functions assume that their input is already validated as
-`Kennitala` They perform no internal validation and are therefore insanely
-fast — but unreliable if coerced to process random strings.
+`Kennitala`. They perform no internal validation and are therefore insanely
+fast — but unreliable if coerced into processing random strings.
 
 ```ts
 import {
@@ -247,10 +251,13 @@ const temporaryKennitalas: Array<KennitalaTemporary> =
 ```
 
 **NOTE:** To **safely** check if a plain, non-validated `string` input is a
-certain type of kennitala, use `parseKennitala` and check the `.type` of the
-retured data object. So, instead of `isPersonKennitala(someString)` do this:
+certain type of kennitala, use [`parseKennitala`](#parsekennitala) and check
+the `.type` of the retured data object. So, instead of
+`isPersonKennitala(someString)` do this:
 
 ```ts
+import { parseKennitala } from 'is-kennitala';
+
 cons res = parseKennitala(someString);
 const isPerson = !!res && res.type === 'person';
 ```
@@ -272,8 +279,8 @@ That way you also get a cleaned-up, normalized
 **Syntax:** `getKennitalaBirthDate(value: string): Date | undefined`
 
 Returns the (UTC) birth-date (or founding-date) of a roughly
-"kennitala-shaped" string — **without** checking if it is a valid `Kennitala`
-because it's assumed such validation has already happened earlier.
+"kennitala-shaped" string. It does NOT check if it is a valid `Kennitala` and
+assumes such validation has already happened beforehand.
 
 It returns `undefined` for malformed (non-kennitala shaped) strings, temporary
 "kerfiskennitalas" and kennitalas with nonsensical dates, even if they're
@@ -414,7 +421,8 @@ set to `'aggressive'`.
 **Syntax:**
 `generateKennitala(opts?: { type?: KennitalaType; birthDate?: Date; robot?: boolean; temporary?: boolean;}): Kennitala`
 
-Generates a technically valid `Kennitala`. (Possibly a real one!)
+Generates a technically valid `Kennitala` (possibly a real one!) for testing
+and generating mock-data.
 
 Defaults to making a `KennitalaPerson`, unless `opts.type` is set to
 `"company"`.
@@ -443,6 +451,10 @@ const kt4: KennitalaCompany = generateKennitala({
 const kt6: KennitalaTemporary = generateKennitala({ temporary: true });
 ```
 
+**NOTE:** This method is dumb and slow. It uses brute-force to search for
+valid checksum characters. If you need more speed, please feel free to submit
+a PR with a better implementation.
+
 ---
 
 ## Exported Types
@@ -455,7 +467,7 @@ This library exports a set of branded types for parsed/validated kennitala
 string values.
 
 These are useful to ensure that a given string value has been parsed by this
-library.
+library, and is not just some random unsafe string.
 
 ```ts
 import type {
@@ -487,9 +499,9 @@ const getBusiness = (kt: KennitalaCompany): Promise<Business> => {
 };
 ```
 
-If you have APIs that you trust to return validated kennitala fields, you can
-cast them to the branded types, before passing them around your application.
-Example:
+If you have APIs that you trust to return validated kennitala fields, you
+should cast them to the branded `Kennitala*` types, before passing them around
+in your application. Example:
 
 ```ts
 import type { KennitalaPerson } from 'is-kennitala';
@@ -507,8 +519,8 @@ const mapAPIIndividual = (apiResult: APIIndividual): Individual => {
 
 #### Zod validation example
 
-Here's an example of how `parseKennitala` can be used in a `zod` transform to
-return the branded types above.
+Here's a quick example of how `parseKennitala` can be used in a `zod`
+transform to return the branded types above.
 
 ```ts
 import { z } from 'zod';
@@ -548,8 +560,7 @@ const ktType: KennitalaType = 'person';
 
 ### type `KennitalaData`
 
-This is type of the data object returned by the
-[`parseKennitala()`](#parsekennitala) method.
+The data object returned by the [`parseKennitala()`](#parsekennitala) method.
 
 It contains the cleaned-up (and branded) kennitala value, as well as
 information about it's type and other properties.

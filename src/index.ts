@@ -127,10 +127,10 @@ type KennitalaParsingOptions<
   PossiblyRobot extends boolean = boolean
 > = {
   /**
-   * If the valdation should specifically check for a
-   * private person, or a legal entity ("company") kennitala.
+   * Limits the valdation to only the kennitalas of either
+   * private "person", or a legal entity ("company").
    *
-   * Defaults to accepting both types.
+   * Default: `undefined` (allows both)
    */
   type?: KtType;
   /**
@@ -173,7 +173,8 @@ type KennitalaParsingOptions<
    * check for valid dates in permanent (non-"Kerfiskennitala") kennitalas.
    *
    * Defaults to `false` — which may result in the occational false-positive
-   * on values starting with something impossible like "3102…" (Feb. 31st)
+   * on values starting with something subtly impossible like "3102…"
+   * (Feb. 31st).
    */
   strictDate?: boolean;
 };
