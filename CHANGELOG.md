@@ -3,6 +3,11 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+
+## 1.0.2
+
+_2023-12-30_
+
 - docs: Minor fixes/improvements to README and JSDoc comments
 
 ## 1.0.0 – 1.0.1

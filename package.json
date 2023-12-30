@@ -1,6 +1,6 @@
 {
   "name": "is-kennitala",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Small, robust, type-safe and fast Icelandic kennitala parsing/handling library.",
   "repository": "ssh://git@github.com:maranomynet/is-kennitala.git",
   "contributors": [
