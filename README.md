@@ -79,9 +79,9 @@ If the parsing/validation fails, it simply returns `undefined`.
 ```ts
 import { parseKennitala } from 'is-kennitala';
 
-const personKtInput = ' 081153-6049';
-const companyKtInput = '530269 – 7609 ';
-const robotKtInput = ' 010130-2989';
+const personKtInput: string = ' 081153-6049';
+const companyKtInput: string = '530269 – 7609 ';
+const robotKtInput: string = ' 010130-2989';
 
 // Does some minor trimming/cleaning:
 const ktData = parseKennitala(personKtInput);
@@ -192,8 +192,8 @@ successful.
 
 Options are the same as for `parseKennitala`, except that `clean` option
 defaults to `"none"`. This allows using the `isValidKennitala` method as a
-type-guard and reduces the risk of accidental false-positives and
-over-confidence in the string input.
+type-guard, and reduces the risk of accidental false-positives and
+over-confidence in the input string.
 
 ```ts
 import { isValidKennitala } from 'is-kennitala';
@@ -246,26 +246,24 @@ const temporaryKennitalas: Array<KennitalaTemporary> =
   personKennitalas.filter(isTempKennitala);
 ```
 
-To safely check if a plain, non-validated `string` input is a certain type of
-kennitala, use `parseKennitala` and check the `.type` of the retured data
-object.
-
-**Example:** Instead of `isPersonKennitala(someString)` do:
+**NOTE:** To **safely** check if a plain, non-validated `string` input is a
+certain type of kennitala, use `parseKennitala` and check the `.type` of the
+retured data object. So, instead of `isPersonKennitala(someString)` do this:
 
 ```ts
 cons res = parseKennitala(someString);
 const isPerson = !!res && res.type === 'person';
 ```
 
-...or...
+...or this:
 
 ```ts
 const res = parseKennitala(someString, { type: 'person' });
 const isPerson = !!res;
 ```
 
-That way you also get a cleaned-up version of the kennitala, and other
-goodies.
+That way you also get a cleaned-up, normalized
+[`Kennitala`](#branded-kennitala-types) value, and other goodies.
 
 ---
 
@@ -274,7 +272,8 @@ goodies.
 **Syntax:** `getKennitalaBirthDate(value: string): Date | undefined`
 
 Returns the (UTC) birth-date (or founding-date) of a roughly
-"kennitala-shaped" string — **without** checking if it is a valid `Kennitala`.
+"kennitala-shaped" string — **without** checking if it is a valid `Kennitala`
+because it's assumed such validation has already happened earlier.
 
 It returns `undefined` for malformed (non-kennitala shaped) strings, temporary
 "kerfiskennitalas" and kennitalas with nonsensical dates, even if they're
@@ -292,13 +291,15 @@ const birthDate = getKennitalaBirthDate(' 530269–7609 ');
 // Returns: new Date(1969-02-13)
 // Note how company kennitalas are unreliable for Very Old™ legal entities.
 
-// Temporary "kerfiskennitala"
-getKennitalaBirthDate('8123456793');
+// Temporary "kerfiskennitala" starts with random gibberish
+getKennitalaBirthDate('812345-6793');
 // Returns: undefined
+
+// Nonsensical dates return undefined
+getKennitalaBirthDate('123456-7890'); // undefined
 
 // Nonsense inputs return undefined
 getKennitalaBirthDate('Not a kennitala!'); // undefined
-getKennitalaBirthDate('123456-7890'); // undefined
 getKennitalaBirthDate(''); // undefined
 ```
 
@@ -321,11 +322,18 @@ formatKennitala('1234567890'); // '123456-7890'
 formatKennitala(' 123456-7890\n'); // '123456-7890'
 formatKennitala('123456 - 7890'); // '123456-7890'
 
-// not kennitala-shaped, returned unchanged:
+// Not kennitala-shaped, returned unchanged:
 formatKennitala('1234 567890'); // '1234 567890'
 formatKennitala('12345 and 67890  '); // '12345 and 67890  '
 formatKennitala('123456789012345'); // '123456789012345'
+
+// With a fancy banana separator:
+formatKennitala('1234567890', ' 🍌 '); // '123456 🍌 7890'
 ```
+
+**NOTE:** The `KennitalaData` object returned by
+[`parseKennitala`](#parsekennitala) has a `.formatted` getter, which can often
+be used instead of this method.
 
 ---
 
@@ -359,6 +367,9 @@ cleanKennitalaCareful(' 1234-567890'); // Returns: '1234-567890'
 cleanKennitalaCareful('123 456-7890'); // Returns: '123 456-7890'
 ```
 
+**NOTE:** This is the default cleaning function used internally by
+[`parseKennitala`](#parsekennitala).
+
 ---
 
 ### `cleanKennitalaAggressive`
@@ -391,6 +402,10 @@ cleanKennitalaAggressive('(kt. 123456-7890, tel. 765 4321) ');
 cleanKennitalaAggressive('(tel. 123-4567, 765-4321)');
 // Returns: '1234567,7654321'
 ```
+
+**NOTE:** This is cleaning function used internally by
+[`parseKennitala`](#parsekennitala) when it's called with its `clean` option
+set to `'aggressive'`.
 
 ---
 
