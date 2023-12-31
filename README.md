@@ -52,8 +52,8 @@ It's philosophy and main features are:
   default, with optional aggressiveness.
 - Provide good developer ergonomics, while promoting good, type-safe coding
   practices.
-- Provide has first-class TypeScript signatures (including "branded types",
-  which happen to play very nicely with `zod`, etc.)
+- Provide first-class TypeScript signatures (including "branded types", which
+  happen to play very nicely with `zod`, etc.)
 - Provide good JSDoc comments for inline IDE help, with `@see` links to this
   readme
 - Build on a suite of extensive unit tests.
