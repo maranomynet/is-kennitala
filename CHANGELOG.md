@@ -3,6 +3,7 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+- perf: Reduce impact of `.strictDate` parsing option
 
 ## 1.0.2
 

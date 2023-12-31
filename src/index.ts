@@ -336,10 +336,6 @@ export function parseKennitala<
   if (!/^(?:[012456]\d|[37][01])(?:0\d|1[012]).+[890]$/.test(value)) {
     return;
   }
-  // optionally perform slower, more rigorous date parsing
-  if (opts.strictDate && !getKennitalaBirthDate(value)) {
-    return;
-  }
 
   const robot = isRobotKt(value);
   if (robot && !opts.robot) {
@@ -355,6 +351,11 @@ export function parseKennitala<
   const type: KennitalaType = value[0]! > '3' ? 'company' : 'person';
   const optType = opts.type;
   if (optType && optType in validTypes && optType !== type) {
+    return;
+  }
+
+  // optionally perform slower, more rigorous date parsing
+  if (opts.strictDate && !getKennitalaBirthDate(value)) {
     return;
   }
 
