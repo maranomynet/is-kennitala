@@ -3,6 +3,11 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+
+## 1.0.3
+
+_2024-01-01_
+
 - perf: Make `parseKennitala` slightly faster and greatly reduce impact of the
   `.strictDate` parsing option
 - perf: Make `getKennitalaBirthDate` faster
