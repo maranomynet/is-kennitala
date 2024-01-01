@@ -124,6 +124,10 @@ if (false as boolean) {
 
 // ---------------------------------------------------------------------------
 
+// Set timezone to something ahead of UTC to make sure tests don't depend on local time
+process.env.TZ = 'Asia/Yangon';
+// process.env.TZ = 'UTC'; // `bun test` uses the UTC TZ by default
+
 describe('parseKennitala', () => {
   const dataKerfis = {
     value: ktKerfis as KennitalaPerson,

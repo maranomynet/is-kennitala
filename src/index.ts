@@ -108,13 +108,17 @@ export const getKennitalaBirthDate = (value: string): Date | undefined => {
   if (!cleaned || /^[89]/.test(cleaned)) {
     return;
   }
-  const DD = String(parseInt(cleaned.slice(0, 2)) % 40).padStart(2, '0');
-  const MM = cleaned.slice(2, 4);
-  const CC = ((parseInt(cleaned.slice(9, 10)) + 2) % 10) + 18;
-  const YY = cleaned.slice(4, 6);
-  const ISODate = `${CC + YY}-${MM}-${DD}`;
-  const birthDate = new Date(ISODate);
-  if (isNaN(birthDate.getTime()) || !birthDate.toISOString().startsWith(ISODate)) {
+  const D = Number(cleaned.slice(0, 2)) % 40;
+  const M = Number(cleaned.slice(2, 4)) - 1;
+  const C = 18 + ((Number(cleaned.slice(9, 10)) + 2) % 10);
+  const Y = C * 100 + Number(cleaned.slice(4, 6));
+  const birthDate = new Date(Date.UTC(Y, M, D));
+  if (
+    isNaN(birthDate.getTime()) ||
+    birthDate.getUTCDate() !== D ||
+    birthDate.getUTCMonth() !== M ||
+    birthDate.getUTCFullYear() !== Y
+  ) {
     return;
   }
   return birthDate;
