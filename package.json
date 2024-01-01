@@ -6,6 +6,7 @@
   "contributors": [
     "Már Örlygsson <mar.nospam@anomy.net>"
   ],
+  "license": "ISC",
   "devDependencies": {
     "@hugsmidjan/hxmstyle": "^8.4.0",
     "@reykjavik/hanna-utils": "^0.2.13",
