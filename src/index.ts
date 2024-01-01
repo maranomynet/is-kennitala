@@ -92,6 +92,23 @@ export const formatKennitala = (value: string, separator = '-') => {
 
 // ---------------------------------------------------------------------------
 
+const _getBirthDateFromCleaned = (cleaned: string): Date | undefined => {
+  const D = Number(cleaned.slice(0, 2)) % 40;
+  const M = Number(cleaned.slice(2, 4)) - 1;
+  const C = 18 + ((Number(cleaned.slice(9, 10)) + 2) % 10);
+  const Y = C * 100 + Number(cleaned.slice(4, 6));
+  const birthDate = new Date(Date.UTC(Y, M, D));
+  if (
+    isNaN(birthDate.getTime()) ||
+    birthDate.getUTCDate() !== D ||
+    birthDate.getUTCMonth() !== M ||
+    birthDate.getUTCFullYear() !== Y
+  ) {
+    return;
+  }
+  return birthDate;
+};
+
 /**
  * Returns the (UTC) birth-date (or founding-date) of a roughly
  * "kennitala-shaped" string — **without** checking if it is a valid
@@ -108,20 +125,7 @@ export const getKennitalaBirthDate = (value: string): Date | undefined => {
   if (!cleaned || /^[89]/.test(cleaned)) {
     return;
   }
-  const D = Number(cleaned.slice(0, 2)) % 40;
-  const M = Number(cleaned.slice(2, 4)) - 1;
-  const C = 18 + ((Number(cleaned.slice(9, 10)) + 2) % 10);
-  const Y = C * 100 + Number(cleaned.slice(4, 6));
-  const birthDate = new Date(Date.UTC(Y, M, D));
-  if (
-    isNaN(birthDate.getTime()) ||
-    birthDate.getUTCDate() !== D ||
-    birthDate.getUTCMonth() !== M ||
-    birthDate.getUTCFullYear() !== Y
-  ) {
-    return;
-  }
-  return birthDate;
+  return _getBirthDateFromCleaned(cleaned);
 };
 
 // ---------------------------------------------------------------------------
@@ -243,7 +247,7 @@ const robotKtNums = [
 let _robotKtRe: RegExp | undefined;
 const isRobotKt = (value: string) => {
   if (!_robotKtRe) {
-    _robotKtRe = new RegExp(`010130(${robotKtNums.join('|')})9`);
+    _robotKtRe = new RegExp(`^010130(?:${robotKtNums.join('|')})9`);
   }
   return _robotKtRe.test(value);
 };
@@ -333,11 +337,9 @@ export function parseKennitala<
     } as KennitalaData<KtType, PossiblyRobot>;
   }
 
-  // Quickly weed out obviously non-date kennitalas
-  // (Example of one such checkSum-valid but nonsensical kennitala: "3368492689")
-  // Here we trade a few false positives for speed:
-  // A value starting with "310290..." (Feb. 31st) might pass
-  if (!/^(?:[012456]\d|[37][01])(?:0\d|1[012]).+[890]$/.test(value)) {
+  const type: KennitalaType = value[0]! > '3' ? 'company' : 'person';
+  const optType = opts.type;
+  if (optType && optType in validTypes && optType !== type) {
     return;
   }
 
@@ -347,19 +349,22 @@ export function parseKennitala<
   }
   let checkSum = 0;
   for (let i = 0, len = magic.length; i < len; i++) {
-    checkSum += magic[i]! * parseInt(value[i]!);
+    checkSum += magic[i]! * Number(value[i]!);
   }
   if (checkSum % 11) {
     return;
   }
-  const type: KennitalaType = value[0]! > '3' ? 'company' : 'person';
-  const optType = opts.type;
-  if (optType && optType in validTypes && optType !== type) {
-    return;
-  }
 
-  // optionally perform slower, more rigorous date parsing
-  if (opts.strictDate && !getKennitalaBirthDate(value)) {
+  const badDate = !opts.strictDate
+    ? // Quickly weed out obviously non-date kennitalas
+      // (Example of one such checksum-valid but nonsensical kennitala: "3368492689")
+      // Here we trade a few false positives for speed:
+      // A value starting with "3102..." (Feb. 31st) might pass
+      !/^(?:[012456]\d|[37][01])(?:0\d|1[012]).+[890]/.test(value)
+    : // A slower, more rigorous date parsing
+      !_getBirthDateFromCleaned(value);
+
+  if (badDate) {
     return;
   }
 

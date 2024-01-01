@@ -3,7 +3,8 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
-- perf: Reduce impact of `.strictDate` parsing option
+- perf: Make `parseKennitala` slightly faster and greatly reduce impact of the
+  `.strictDate` parsing option
 - perf: Make `getKennitalaBirthDate` faster
 
 ## 1.0.2
