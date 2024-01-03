@@ -1,7 +1,7 @@
 # `is-kennitala`
 
 Small, robust, type-safe and fast Icelandic kennitala parsing/handling
-library.
+library for JavaScript/TypeScript.
 
 > [!TIP]  
 > "Kennitalas" are the Icelandic national ids assigned to both private
