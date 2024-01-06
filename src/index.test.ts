@@ -22,6 +22,7 @@ import {
   isValidKennitala,
   parseKennitala,
 } from './index.js';
+import * as kennitalaModule from './index.js';
 
 const ktPerson = '1012755239';
 const ktCompany = '5001012880';
@@ -48,10 +49,29 @@ const kt_Malformed3 = '101275   - 5239';
 const kt_Malformed2_EmDash = '101275—5239';
 
 // ---------------------------------------------------------------------------
-// Type Signature Tests
+// Test Type Signature and Exports
 
 if (false as boolean) {
   /* eslint-disable @typescript-eslint/no-unused-vars */
+
+  // Make sure the module exports are as advertised
+  const expectedExports: Record<keyof typeof kennitalaModule, true> = {
+    parseKennitala: true,
+    isValidKennitala: true,
+
+    isCompanyKennitala: true,
+    isPersonKennitala: true,
+    isTempKennitala: true,
+
+    cleanKennitalaCareful: true,
+    cleanKennitalaAggressive: true,
+
+    formatKennitala: true,
+    getKennitalaBirthDate: true,
+
+    generateKennitala: true,
+  };
+
   const either = parseKennitala(ktPerson);
   if (either) {
     type v = Expect<Equals<typeof either.value, Kennitala>>;
@@ -123,6 +143,7 @@ if (false as boolean) {
 }
 
 // ---------------------------------------------------------------------------
+// Test Individual Functions
 
 // Set timezone to something ahead of UTC to make sure tests don't depend on local time
 process.env.TZ = 'Asia/Yangon';
@@ -619,29 +640,3 @@ describe('generateKennitala', () => {
     expect(makeKtStable(ktAncientCompany) === '170650___9').toBe(false);
   });
 });
-
-// ---------------------------------------------------------------------------
-// Testing exports
-
-/* eslint-disable @typescript-eslint/no-unused-vars, import/first */
-import * as kennitalaModule from './index.js';
-
-if (false as boolean) {
-  const expectedExports: Record<keyof typeof kennitalaModule, true> = {
-    parseKennitala: true,
-    isValidKennitala: true,
-
-    isCompanyKennitala: true,
-    isPersonKennitala: true,
-    isTempKennitala: true,
-
-    cleanKennitalaCareful: true,
-    cleanKennitalaAggressive: true,
-
-    formatKennitala: true,
-    getKennitalaBirthDate: true,
-
-    generateKennitala: true,
-  };
-}
-/* eslint-enable */
