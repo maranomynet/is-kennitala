@@ -27,7 +27,10 @@
     "prepublishOnly": "echo \"\nRun 'bun run publish:lib' to publish this package\n\n\"  &&  exit 1",
     "publish:lib": "bun run build  &&  bun npm-publish.ts",
     "build": "bun test  &&  bun build.ts",
-    "test": "bun test"
+    "check": "yarn run check:types  &&  yarn run check:eslint",
+    "check:eslint": "eslint --quiet \"*.{mjs,js,ts,tsx}\" \"src/**/*.{mjs,js,ts,tsx}\"",
+    "check:types": "tsc --project tsconfig.json --noEmit --pretty --incremental false",
+    "test": "bun run check  &&  bun test"
   },
   "hxmstyle": {
     "options": {

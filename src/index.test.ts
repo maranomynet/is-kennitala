@@ -1,4 +1,4 @@
-import { Equals, Expect, Extends, NotExtends } from '@reykjavik/hanna-utils';
+import type { Equals, Expect, Extends, NotExtends } from '@reykjavik/hanna-utils';
 import { describe, expect, test } from 'bun:test';
 
 import type {
