@@ -4,5 +4,11 @@ module.exports = require('@hugsmidjan/hxmstyle')({
 
   // extendsFirst: [], // extended BEFORE the hxmstyle rules
   // extends: [], // added after the hxmstyle rules
-  env: { es2020: true },
+  env: { node: true, es2020: true },
+  rules: {
+    // Require .js file extensions for all local imports.
+    // Otherwise tsc emits ESM modules that don't work with Next.js
+    // (and possibly other bundlers)
+    'import/extensions': ['error', 'ignorePackages'],
+  },
 });
