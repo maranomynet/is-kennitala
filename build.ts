@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
 
 import pkg from './package.json';
 
@@ -15,25 +15,15 @@ const makePackageJson = async (outDir: string, extraFields?: Record<string, unkn
   await Bun.write(`${outDir}/package.json`, JSON.stringify(libPkg, null, '\t'));
 };
 
-const tscBuild = async (module: string, outdir: string) =>
-  execSync(
-    `bun x tsc --project tsconfig.build.json --outDir ${outdir} --module ${module}`
-  );
-
 // ---------------------------------------------------------------------------
 
 const dist = '_npm-lib';
 
-execSync(
-  [
-    `rm -rf ${dist}`,
-    `mkdir ${dist} ${dist}/esm`,
-    `cp README.md CHANGELOG.md ${dist}`,
-  ].join(' && ')
-);
+execSync(`rm -rf ${dist}`);
+execSync(`bun x tsc --project tsconfig.build.json --module commonjs --outDir ${dist}`);
+execSync(`bun x tsc --project tsconfig.build.json --module esnext --outDir ${dist}/esm`);
+execSync(`cp README.md CHANGELOG.md ${dist}`);
 Promise.all([
-  tscBuild('commonjs', dist),
-  tscBuild('esnext', `${dist}/esm`),
   makePackageJson(dist),
   Bun.write(`${dist}/esm/package.json`, JSON.stringify({ type: 'module' })),
 ]);

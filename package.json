@@ -19,18 +19,19 @@
   "engines": {
     "bun": "1.0.20",
     "node": "9999. Please use bun",
-    "npm": "9999. Please use bun"
+    "npm": "9999. Please use bun",
+    "yarn": "9999. Please use bun"
   },
   "type": "module",
   "scripts": {
-    "dev": "bun test --watch",
+    "dev": "bun install  &&  bun test --watch",
+    "build": "bun install  &&  bun run test  &&  bun build.ts",
+    "test": "bun run check  &&  bun test",
     "prepublishOnly": "echo \"\nRun 'bun run publish:lib' to publish this package\n\n\"  &&  exit 1",
     "publish:lib": "bun run build  &&  bun npm-publish.ts",
-    "build": "bun test  &&  bun build.ts",
     "check": "yarn run check:types  &&  yarn run check:eslint",
-    "check:eslint": "eslint --quiet \"*.{mjs,js,ts,tsx}\" \"src/**/*.{mjs,js,ts,tsx}\"",
-    "check:types": "tsc --project tsconfig.json --noEmit --pretty --incremental false",
-    "test": "bun run check  &&  bun test"
+    "check:eslint": "eslint --quiet \"*.{cjs,js,ts,tsx}\" \"src/**/*.{cjs,js,ts,tsx}\"",
+    "check:types": "tsc --project tsconfig.json --noEmit --pretty --incremental false"
   },
   "hxmstyle": {
     "options": {
