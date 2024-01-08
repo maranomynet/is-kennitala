@@ -48,7 +48,7 @@ const kt_Malformed2 = ' 101275-52';
 const kt_Malformed3 = '101275   - 5239';
 const kt_Malformed2_EmDash = '101275—5239';
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // Test Type Signature and Exports
 
 if (false as boolean) {
@@ -71,6 +71,14 @@ if (false as boolean) {
 
     generateKennitala: true,
   };
+
+  type Kennitala_is_exported = Kennitala;
+  type KennitalaCompany_is_exported = KennitalaCompany;
+  type KennitalaDataCompany_is_exported = KennitalaDataCompany;
+  type KennitalaDataPerson_is_exported = KennitalaDataPerson;
+  type KennitalaPerson_is_exported = KennitalaPerson;
+  type KennitalaTemporary_is_exported = KennitalaTemporary;
+  type KennitalaType_is_exported = KennitalaType;
 
   const either = parseKennitala(ktPerson);
   if (either) {
@@ -139,10 +147,11 @@ if (false as boolean) {
   type v2 = Expect<Equals<typeof alwaysPerson2, KennitalaDataPerson<boolean>>>;
   const alwaysCompany = parseKennitala(ktCompany as KennitalaCompany);
   type v3 = Expect<Equals<typeof alwaysCompany, KennitalaDataCompany>>;
-  /* eslint-enable */
+
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // Test Individual Functions
 
 // Set timezone to something ahead of UTC to make sure tests don't depend on local time
