@@ -20,6 +20,7 @@ try {
     message?: string;
     output?: Array<Buffer>;
   };
-  console.info(output ? output.join('\n').trim() : message || err);
+  console.error(output ? output.join('\n').trim() : message || err);
+  console.trace(err); // eslint-disable-line no-console
   process.exit(1);
 }
