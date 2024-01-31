@@ -81,12 +81,12 @@ If the parsing/validation fails, it returns `undefined`.
 ```ts
 import { parseKennitala } from 'is-kennitala';
 
+// Minor trimming/cleaning occurs by default:
 const personKtInput: string = ' 081153-6049';
 const companyKtInput: string = '530269 – 7609 ';
 const robotKtInput: string = ' 010130-2989';
-const kerfisKtInput: string = '812345-6793';
+const kerfisKtInput: string = '812345 6793';
 
-// Does some minor trimming/cleaning:
 const ktData = parseKennitala(personKtInput);
 console.log(ktData.value); // '0811536049'
 console.log(ktData.type); // 'person'
@@ -100,10 +100,10 @@ console.log(ktData1.type); // 'company'
 // etc...
 
 // This input is too dirty:
-const ktData2 = parseKennitala('kt.' + personKtInput);
+const ktData2 = parseKennitala(`kt. 081153-6049`);
 // Returns: undefined
 
-// Opt-in to a lot more aggressive cleaning:
+// You can opt-in to more aggressive clean-up:
 const ktData3 = parseKennitala('kt. 08 11 53 - 6049 yo!', {
   clean: 'aggressive',
 });
@@ -179,8 +179,8 @@ Controls how much to clean up the input string before parsing it.
 Set this flag to `true` to opt into a slower, but more perfect check for valid
 dates in permanent (non-"Kerfiskennitala") kennitalas.
 
-Defaults to `false` — which may result in the occational false-positive on
-values starting with something subtly impossible like "3102…" (Feb. 31st).
+Defaults to `false` — which may result in the occasional false-positive on
+values starting with something subtly impossible like "3103…" (March 31st).
 
 ---
 
