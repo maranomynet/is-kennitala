@@ -31,6 +31,7 @@ npm install is-kennitala
   - [type `KennitalaData`](#type-kennitaladata)
 - [Contributing](#contributing)
 - [Change Log](#change-log)
+- [Other Iceland-Themed Libraries](#other-iceland-themed-libraries)
 
 <!-- prettier-ignore-end -->
 
@@ -602,3 +603,10 @@ PRs are welcoms!
 
 See
 [CHANGELOG.md](https://github.com/maranomynet/is-kennitala/blob/dev/CHANGELOG.md)
+
+## Other Iceland-Themed Libraries
+
+- [`postnumer`](https://npmjs.com/package/postnumer) - Icelandic post-codes
+  (Póstnúmer) and town/locality names and their National Registry ID codes.
+- [`fridagar`](https://npmjs.com/package/fridagar) - Icelandic public holidays
+  and other commonly observed 'special' days.
