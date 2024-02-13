@@ -7,9 +7,18 @@
     "Már Örlygsson <mar.nospam@anomy.net>"
   ],
   "license": "ISC",
+  "npmPackageJson": {
+    "type": null,
+    "private": null,
+    "scripts": null,
+    "devDependencies": null,
+    "hxmstyle": null,
+    "engines": null,
+    "sideEffects": false
+  },
   "devDependencies": {
     "@hugsmidjan/hxmstyle": "^8.4.0",
-    "@maranomynet/libtools": "^0.1.4",
+    "@maranomynet/libtools": "^0.1.7",
     "@types/bun": "^1.0.4",
     "eslint": "^8.56.0",
     "prettier": "^2.8.8",
@@ -24,23 +33,15 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "bun install  &&  bun test --watch",
+    "dev": "bun scripts/dev.ts",
     "build": "bun scripts/build.ts",
     "publish:lib": "bun scripts/publish.ts",
-    "prepublishOnly": "echo \"\nRun 'bun run publish:lib' to publish this package\n\n\"  &&  exit 1"
+    "prepublishOnly": "echo \"\nRun 'bun run publish:lib' to publish this package\n\n\"  &&  exit 1",
+    "format": "bun scripts/format.ts"
   },
   "hxmstyle": {
     "options": {
       "typescript": true
     }
-  },
-  "npmPackageJson": {
-    "type": null,
-    "private": null,
-    "scripts": null,
-    "devDependencies": null,
-    "hxmstyle": null,
-    "engines": null,
-    "sideEffects": false
   }
 }
