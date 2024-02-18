@@ -11,6 +11,8 @@ for JavaScript/TypeScript.
 npm install is-kennitala
 ```
 
+**Contents:**
+
 <!-- prettier-ignore-start -->
 
 - [Features](#features)
