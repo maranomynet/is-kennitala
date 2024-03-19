@@ -370,9 +370,12 @@ cleanKennitalaCareful(' 123456 - 7890'); // Returns: '1234567890'
 cleanKennitalaCareful('123456 -7890'); // Returns: '1234567890'
 
 // Only trimmed as the input is not "kennitala-shaped" enough:
+// WAT‽
 cleanKennitalaCareful(' abc '); // Returns: 'abc'
-cleanKennitalaCareful(' 123456 - 7890'); // Returns: '123456 - 7890'
-cleanKennitalaCareful('kt. 123456-7890'); // Returns: 'kt. 123456-7890'
+// preceeding non-digit gunk
+cleanKennitalaCareful('kt. 123456-7890 '); // Returns: 'kt. 123456-7890'
+cleanKennitalaCareful('tel: 123456-7890'); // Returns: 'tel: 123456-7890'
+// Suspicious splits
 cleanKennitalaCareful(' 1234-567890'); // Returns: '1234-567890'
 cleanKennitalaCareful('123 456-7890'); // Returns: '123 456-7890'
 ```
