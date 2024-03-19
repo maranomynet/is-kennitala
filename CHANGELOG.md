@@ -4,6 +4,10 @@
 
 - ... <!-- Add new lines here. -->
 
+## 1.0.4
+
+_2024-03-19_
+
 - docs: Fix (and improve) README
 
 ## 1.0.3
