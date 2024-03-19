@@ -17,10 +17,10 @@
     "sideEffects": false
   },
   "devDependencies": {
-    "@hugsmidjan/hxmstyle": "^8.4.0",
-    "@maranomynet/libtools": "^0.1.7",
-    "@types/bun": "^1.0.4",
-    "eslint": "^8.56.0",
+    "@hugsmidjan/hxmstyle": "^8.7.0",
+    "@maranomynet/libtools": "^0.1.10",
+    "@types/bun": "^1.0.8",
+    "eslint": "^8.57.0",
     "prettier": "^2.8.8",
     "typescript": "^5.3.3"
   },
