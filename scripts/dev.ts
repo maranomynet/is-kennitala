@@ -1,6 +1,4 @@
-import { shell$ } from '@maranomynet/libtools';
-
-import { typeCheckSources } from '../src/_/checking.js';
+import { shell$, typeCheckSources } from '@maranomynet/libtools';
 
 await shell$(`bun install`);
 shell$(`bun test --watch`);
