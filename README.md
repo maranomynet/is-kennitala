@@ -169,13 +169,12 @@ Why are temporary kennitalas accepted by default?
 
 Controls how much to clean up the input string before parsing it.
 
-- Default is [`"careful"`](#cleankennitalacareful) mode, which performs only
-  minimal cleaning on the incoming string ...trimming it and then removing a
-  space and/or dash right before the last four of the ten digits.
+- [`"careful"`](#cleankennitalacareful) mode (default) performs only minimal
+  cleaning on the incoming string ...trims it and then removes space (and/or
+  dash) right before the last four digits.
 - [`"aggressive"`](#cleankennitalaaggressive) mode strips away ALL spaces and
-  dashes, and throws away any leading/trailing gunk.
-- `false`/`"none"` instructs the parser to perform no cleanup whatsoever, not
-  even trimming.
+  dashes, and throws away any leading/trailing non-digit gunk.
+- `false`/`"none"` does no cleanup whatsoever, not even trimming.
 
 **`strictDate`**`?: boolean`
 
@@ -183,7 +182,7 @@ Set this flag to `true` to opt into a slower, but more perfect check for valid
 dates in permanent (non-"Kerfiskennitala") kennitalas.
 
 Defaults to `false` — which may result in the occasional false-positive on
-values starting with something subtly impossible like "3103…" (March 31st).
+values starting with something subtly impossible like "3104…" (April 31st).
 
 ---
 
@@ -299,7 +298,7 @@ const birthDate = getKennitalaBirthDate('0101302989');
 // The company kennitala of Reykjavík City
 const birthDate = getKennitalaBirthDate(' 530269–7609 ');
 // Returns: new Date(1969-02-13)
-// Note how company kennitalas are unreliable for Very Old™ legal entities.
+// Note that birth dates for Very Old™ legal entities are unreliable/bogus.
 
 // Temporary "kerfiskennitala" starts with random gibberish
 getKennitalaBirthDate('812345-6793');
@@ -320,7 +319,7 @@ getKennitalaBirthDate(''); // undefined
 **Syntax:** `formatKennitala(value: string, separator?: string): string`
 
 Runs [minimal cleanup](#cleankennitalacareful) on the input string and if it
-looks rougly like a kennitala then then inserts a nice separator (`'-'` by
+looks rougly like a kennitala, then it inserts a nice separator (`'-'` by
 default) before the last four digits.
 
 It falls back to returning the input untouched.
