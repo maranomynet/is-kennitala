@@ -1,4 +1,4 @@
-# `is-kennitala`
+# `is-kennitala` <!-- omit from toc -->
 
 Small, robust, type-safe and fast Icelandic kennitala parsing/handling library
 for JavaScript/TypeScript.
@@ -489,14 +489,14 @@ interface Customer {
   // ...other props
 }
 
-interface Inidivdual extends Customer {
+interface Individual extends Customer {
   kennitala: KennitalaPerson;
 }
 interface Business extends Customer {
   kennitala: KennitalaCompany;
 }
 
-const getIndividual = (kt: KennitalaPerson): Promise<Inidivdual> => {
+const getIndividual = (kt: KennitalaPerson): Promise<Individual> => {
   // ...
 };
 const getBusiness = (kt: KennitalaCompany): Promise<Business> => {
