@@ -450,6 +450,7 @@ describe('isPersonKennitala, isCompanyKennitala, isTemporaryKennitala', () => {
 
   // Quick type tests
   if (false as boolean) {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const ktTest = '' as Kennitala;
     if (isPersonKennitala(ktTest)) {
       type v = Expect<Equals<typeof ktTest, KennitalaPerson>>;
@@ -457,6 +458,7 @@ describe('isPersonKennitala, isCompanyKennitala, isTemporaryKennitala', () => {
     if (isCompanyKennitala(ktTest)) {
       type v = Expect<Equals<typeof ktTest, KennitalaCompany>>;
     }
+    /* eslint-enable @typescript-eslint/no-unused-vars */
   }
 });
 
