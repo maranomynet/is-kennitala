@@ -320,7 +320,10 @@ export function parseKennitala<
   if (value.length !== 10 || /\D/.test(value)) {
     return;
   }
-  if (/^[89]/.test(value) && !opts.rejectTemporary && opts.type !== 'company') {
+  if (/^[89]/.test(value)) {
+    if (opts.rejectTemporary || opts.type === 'company') {
+      return;
+    }
     /*
       Skráning í kerfiskennitöluskrá er eingöngu fyrir einstaklinga sem
       dvelja skemur en 3-6 mánuði á Íslandi eða munu ekki dvelja hér á landi.
