@@ -17,12 +17,12 @@
     "sideEffects": false
   },
   "devDependencies": {
-    "@hugsmidjan/hxmstyle": "^8.7.0",
-    "@maranomynet/libtools": "^0.1.10",
-    "@types/bun": "^1.0.8",
-    "eslint": "^8.57.0",
+    "@hugsmidjan/hxmstyle": "^8.10.0",
+    "@maranomynet/libtools": "^0.1.15",
+    "@types/bun": "^1.1.12",
+    "eslint": "^8.57.1",
     "prettier": "^2.8.8",
-    "typescript": "^5.3.3"
+    "typescript": "^5.6.3"
   },
   "private": true,
   "engines": {
