@@ -3,6 +3,11 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+
+## 1.0.5
+
+_2024-11-14_
+
 - perf: Speed up parsing of "Kerfiskenntala"s
 
 ## 1.0.4
