@@ -28,6 +28,7 @@ npm install is-kennitala
   - [`generateKennitala`](#generatekennitala)
 - [Exported Types](#exported-types)
   - [Branded `Kennitala` Types](#branded-kennitala-types)
+    - [Valibot example](#valibot-example)
     - [Zod validation example](#zod-validation-example)
   - [type `KennitalaType`](#type-kennitalatype)
   - [type `KennitalaData`](#type-kennitaladata)
@@ -520,6 +521,28 @@ const mapAPIIndividual = (apiResult: APIIndividual): Individual => {
     // ...map other props
   };
 };
+```
+
+#### Valibot example
+
+Here's a quick example of how `parseKennitala` can be used in a `valibot`
+transform to return the branded types above.
+
+```ts
+import * as v from 'valibot';
+import { parseKennitala } from 'is-kennitala';
+
+const kennitalaSchema = v.pipe(
+  v.string(),
+  v.rawTransform(({ dataset, addIssue, NEVER }) => {
+    const kt = parseKennitala(dataset.value);
+    if (!kt) {
+      addIssue({ message: 'Not a valid kennitala' });
+      return NEVER;
+    }
+    return kt.value; // branded string value
+  })
+);
 ```
 
 #### Zod validation example
