@@ -9,6 +9,7 @@
 _2024-11-14_
 
 - perf: Speed up parsing of "Kerfiskenntala"s
+- docs: Improve docs, fix typos, add `valibot` schema example
 
 ## 1.0.4
 

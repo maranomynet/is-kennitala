@@ -57,7 +57,7 @@ It's philosophy and main features are:
 - Provide good developer ergonomics, while promoting good, type-safe coding
   practices.
 - Provide first-class TypeScript signatures (including "branded types", which
-  happen to play very nicely with `zod`, etc.)
+  happen to play very nicely with `valibot`, `zod`, etc.)
 - Provide good JSDoc comments for inline IDE help, with `@see` links to this
   readme
 - Build on a suite of extensive unit tests.
