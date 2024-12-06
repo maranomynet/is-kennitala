@@ -99,10 +99,11 @@ const _getBirthDateFromCleaned = (cleaned: string): Date | undefined => {
   const Y = C * 100 + Number(cleaned.slice(4, 6));
   const birthDate = new Date(Date.UTC(Y, M, D));
   if (
-    isNaN(birthDate.getTime()) ||
-    birthDate.getUTCDate() !== D ||
-    birthDate.getUTCMonth() !== M ||
-    birthDate.getUTCFullYear() !== Y
+    (isNaN(birthDate.getTime()) ||
+      birthDate.getUTCDate() !== D ||
+      birthDate.getUTCMonth() !== M ||
+      birthDate.getUTCFullYear() !== Y) &&
+    !/^(?:69|70)0269/.test(cleaned) // Special case for super-old company kennitalas
   ) {
     return;
   }

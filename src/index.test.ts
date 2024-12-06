@@ -26,6 +26,7 @@ import * as kennitalaModule from './index.js';
 
 const ktPerson = '1012755239';
 const ktCompany = '5001012880';
+const ktCompany2 = '7002691169'; // Litla-Hraun, 30. (!) feb. 1969
 const ktGervi = '0101307789';
 const ktKerfis = '8123456793';
 const ktInvalid1 = '1212657890';
@@ -181,6 +182,13 @@ describe('parseKennitala', () => {
     formatted: '500101-2880',
   } as const;
 
+  const dataCompany2 = {
+    value: ktCompany2 as KennitalaCompany,
+    type: 'company',
+    robot: false,
+    formatted: '700269-1169',
+  } as const;
+
   const dataGervi = {
     value: ktGervi as KennitalaPerson,
     type: 'person',
@@ -192,6 +200,7 @@ describe('parseKennitala', () => {
     expect(parseKennitala(ktPerson)).toMatchObject(dataPerson);
     expect(parseKennitala(ktKerfis)).toMatchObject(dataKerfis);
     expect(parseKennitala(ktCompany)).toMatchObject(dataCompany);
+    expect(parseKennitala(ktCompany2)).toMatchObject(dataCompany2);
     expect(parseKennitala(ktGervi)).toBeUndefined();
     expect(parseKennitala(ktInvalid1)).toBeUndefined();
     expect(parseKennitala(ktInvalid2)).toBeUndefined();
@@ -248,6 +257,9 @@ describe('parseKennitala', () => {
     });
     test(`${prefix} strictDate company`, () => {
       expect(parseKennitala(ktCompany, { strictDate: true })).toBeDefined();
+    });
+    test(`${prefix} strictDate company 1969-02-30 edge case`, () => {
+      expect(parseKennitala(ktCompany2, { strictDate: true })).toBeDefined();
     });
   }
 
@@ -538,6 +550,8 @@ describe('getKennitalaBirthDate', () => {
     expect(p2BDay?.toISOString().substring(0, 10)).toBe('1975-12-10');
     const cBDay = getKennitalaBirthDate(kt_Company);
     expect(cBDay?.toISOString().substring(0, 10)).toBe('2001-01-10');
+    const c2BDay = getKennitalaBirthDate(ktCompany2);
+    expect(c2BDay?.toISOString().substring(0, 10)).toBe('1969-03-02'); // There's nothing better we can do about 30. feb. ¯\_(ツ)_/¯
     const iBDay = getKennitalaBirthDate(ktInvalid1);
     expect(iBDay?.toISOString().substring(0, 10)).toBe('2065-12-12'); // Kennitalas are not validated
     const i2BDay = getKennitalaBirthDate(kt_Malformed1);
