@@ -3,6 +3,11 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+
+## 1.0.6
+
+_2024-12-06_
+
 - fix: Correctly handle companies "founded" on February 29th and 30th of 1969
 
 ## 1.0.5
