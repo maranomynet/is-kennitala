@@ -103,7 +103,7 @@ const _getBirthDateFromCleaned = (cleaned: string): Date | undefined => {
       birthDate.getUTCDate() !== D ||
       birthDate.getUTCMonth() !== M ||
       birthDate.getUTCFullYear() !== Y) &&
-    !/^(?:69|70)0269/.test(cleaned) // Special case for super-old company kennitalas
+    !/^(?:69|7[01])0269/.test(cleaned) // Special case for super-old company kennitalas
   ) {
     return;
   }

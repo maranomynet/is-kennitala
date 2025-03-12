@@ -261,6 +261,9 @@ describe('parseKennitala', () => {
     test(`${prefix} strictDate company 1969-02-30 edge case`, () => {
       expect(parseKennitala(ktCompany2, { strictDate: true })).toBeDefined();
     });
+    test(`${prefix} strictDate company 1969-02-31 edge case`, () => {
+      expect(parseKennitala('7102691149', { strictDate: true })).toBeDefined();
+    });
   }
 
   test('Optionally rejects Kerfiskennitalas', () => {
