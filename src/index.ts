@@ -103,7 +103,11 @@ const _getBirthDateFromCleaned = (cleaned: string): Date | undefined => {
       birthDate.getUTCDate() !== D ||
       birthDate.getUTCMonth() !== M ||
       birthDate.getUTCFullYear() !== Y) &&
-    !/^(?:69|7[01])0269/.test(cleaned) // Special case for super-old company kennitalas
+    !/^(?:69|7[01])0269/.test(cleaned) // Special-case for super-old company kennitalas
+    // When the kennitala system was introduced it was decided to cap the
+    // founding date of old legal entities at 1969, and just casually spread
+    // the ones older than that over that year. This resulted in weird/invalid
+    // dates.
   ) {
     return;
   }

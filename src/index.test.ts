@@ -258,11 +258,14 @@ describe('parseKennitala', () => {
     test(`${prefix} strictDate company`, () => {
       expect(parseKennitala(ktCompany, { strictDate: true })).toBeDefined();
     });
-    test(`${prefix} strictDate company 1969-02-30 edge case`, () => {
+    test(`${prefix} strictDate company 1969 Feb 29th-31st edge cases`, () => {
       expect(parseKennitala(ktCompany2, { strictDate: true })).toBeDefined();
-    });
-    test(`${prefix} strictDate company 1969-02-31 edge case`, () => {
-      expect(parseKennitala('7102691149', { strictDate: true })).toBeDefined();
+      const feb31kt = '7102691149';
+      expect(parseKennitala(feb31kt, { strictDate: true })).toBeDefined();
+      // doesn't accidentally allow this as a person
+      expect(
+        parseKennitala(feb31kt, { type: 'person', strictDate: true })
+      ).toBeUndefined();
     });
   }
 
