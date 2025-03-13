@@ -17,16 +17,16 @@
     "sideEffects": false
   },
   "devDependencies": {
-    "@hugsmidjan/hxmstyle": "^8.10.0",
-    "@maranomynet/libtools": "^0.1.15",
-    "@types/bun": "^1.1.12",
+    "@hugsmidjan/hxmstyle": "^8.12.0",
+    "@maranomynet/libtools": "^0.1.16",
+    "@types/bun": "^1.2.5",
     "eslint": "^8.57.1",
     "prettier": "^2.8.8",
-    "typescript": "^5.6.3"
+    "typescript": "^5.8.2"
   },
   "private": true,
   "engines": {
-    "bun": "1.0.20",
+    "bun": "1.1.5",
     "node": "9999. Please use bun",
     "npm": "9999. Please use bun",
     "yarn": "9999. Please use bun"
