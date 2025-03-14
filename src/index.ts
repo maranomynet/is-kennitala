@@ -520,6 +520,7 @@ export function generateKennitala(opts: GenerateOptions = {}): Kennitala {
   // NOTE: This is slow, but `generateKennitala` is generally not used
   // in performance-critical code-paths.
   // Open a GitHub issue if you need a faster implementation.
+  const startTime = process.env.NODE_ENV === 'test' ? Date.now() : 0;
   while (true as boolean) {
     let x = 0; // Checksum digit
     const RR = isCompany
@@ -531,6 +532,16 @@ export function generateKennitala(opts: GenerateOptions = {}): Kennitala {
         return kt;
       }
       x++;
+    }
+    if (process.env.NODE_ENV === 'test' && Date.now() - startTime > 500) {
+      // This helps the tests catch accidental infinite loops
+      // instead of just hanging in silence.
+      // The `process.env.NODE_ENV` check ensures this part of the code is
+      // tree-shaken away in production builds.
+      throw new Error(
+        'generateKennitala: Failed to find a valid checksum digit ' +
+          'within a reasonable timeframe.'
+      );
     }
   }
   return kt as Kennitala;
