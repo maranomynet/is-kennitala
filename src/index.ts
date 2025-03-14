@@ -368,7 +368,7 @@ export function parseKennitala<
       // (Example of one such checksum-valid but nonsensical kennitala: "3368492689")
       // Here we trade a few false positives for speed:
       // A value starting with "3102..." (Feb. 31st) might pass
-      !/^(?:[012456]\d|[37][01])(?:0\d|1[012]).+[890]/.test(value)
+      !/^(?:[012456]\d|[37][01])(?:0\d|1[012]).{5}[890]$/.test(value)
     : // A slower, more rigorous date parsing
       !_getBirthDateFromCleaned(value);
 

@@ -3,6 +3,7 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+- fix: Make quick date validation RegExp slightly more accurate
 
 ## 1.0.7
 
