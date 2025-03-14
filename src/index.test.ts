@@ -225,6 +225,11 @@ describe('parseKennitala', () => {
     expect(parseKennitala(kt_Company2)).toMatchObject(dataCompany);
   });
 
+  test('Is chill with kennitalas with digits 7 and 8 less than 20', () => {
+    // Actual such kennitalas exist, despite official documentation saying they shouldn't
+    expect(parseKennitala('1012751599')).toBeDefined();
+  });
+
   {
     const prefix = 'Rejects kennitalas w. bad dates →';
 
