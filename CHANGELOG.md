@@ -3,6 +3,7 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+- perf: Add `#__NO_SIDE_EFFECTS__` compiler notation to all exported functions
 - fix: Make quick date validation RegExp slightly more accurate
 
 ## 1.0.7

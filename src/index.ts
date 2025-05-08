@@ -46,6 +46,7 @@ export type KennitalaType = 'person' | 'company';
  *
  * @see https://github.com/maranomynet/is-kennitala/tree/v1#cleankennitalacareful
  */
+/*#__NO_SIDE_EFFECTS__*/
 export const cleanKennitalaCareful = (value: string): string =>
   value.trim().replace(/^(\d{6})\s?[-–]?\s?(\d{4})$/, '$1$2');
 
@@ -57,6 +58,7 @@ export const cleanKennitalaCareful = (value: string): string =>
  *
  * @see https://github.com/maranomynet/is-kennitala/tree/v1#cleankennitalaaggressive
  */
+/*#__NO_SIDE_EFFECTS__*/
 export const cleanKennitalaAggressive = (value: string): string =>
   value
     .replace(/^\D+/, '')
@@ -82,6 +84,7 @@ const format = (ktShaped: string, separator = '-') =>
  *
  * @see https://github.com/maranomynet/is-kennitala/tree/v1#formatkennitala
  */
+/*#__NO_SIDE_EFFECTS__*/
 export const formatKennitala = (value: string, separator = '-') => {
   const cleaned = cleanIfKtShaped(value);
   if (!cleaned) {
@@ -125,6 +128,7 @@ const _getBirthDateFromCleaned = (cleaned: string): Date | undefined => {
  *
  * @see https://github.com/maranomynet/is-kennitala/tree/v1#getkennitalabirthdate
  */
+/*#__NO_SIDE_EFFECTS__*/
 export const getKennitalaBirthDate = (value: string): Date | undefined => {
   const cleaned = cleanIfKtShaped(value);
   if (!cleaned || /^[89]/.test(cleaned)) {
@@ -303,7 +307,7 @@ export function parseKennitala<
   opts?: KennitalaParsingOptions<KtType, PossiblyRobot>
 ): KennitalaData<KtType, PossiblyRobot> | undefined;
 
-// eslint-disable-next-line complexity
+/*#__NO_SIDE_EFFECTS__*/ // eslint-disable-next-line complexity
 export function parseKennitala<
   KtType extends KennitalaType,
   PossiblyRobot extends boolean = true
@@ -415,6 +419,7 @@ export function isValidKennitala<O extends { clean?: 'none' | false }>(
 ): value is Kennitala;
 export function isValidKennitala(value: string, opts?: KennitalaParsingOptions): boolean;
 
+/*#__NO_SIDE_EFFECTS__*/
 export function isValidKennitala(value: string, opts?: KennitalaParsingOptions): boolean {
   return !!parseKennitala(value, {
     ...opts,
@@ -430,6 +435,7 @@ export function isValidKennitala(value: string, opts?: KennitalaParsingOptions):
  *
  * @see https://github.com/maranomynet/is-kennitala/tree/v1#kennitala-discriminators
  */
+/*#__NO_SIDE_EFFECTS__*/
 export const isPersonKennitala = (kennitala: Kennitala): kennitala is KennitalaPerson =>
   // Temporary "kerfiskenntalas" for people start with 8 or 9
   /^[012389]/.test(kennitala);
@@ -439,6 +445,7 @@ export const isPersonKennitala = (kennitala: Kennitala): kennitala is KennitalaP
  *
  * @see https://github.com/maranomynet/is-kennitala/tree/v1#kennitala-discriminators
  */
+/*#__NO_SIDE_EFFECTS__*/
 export const isCompanyKennitala = (kennitala: Kennitala): kennitala is KennitalaCompany =>
   /^[4567]/.test(kennitala);
 
@@ -448,6 +455,7 @@ export const isCompanyKennitala = (kennitala: Kennitala): kennitala is Kennitala
  *
  * @see https://github.com/maranomynet/is-kennitala/tree/v1#kennitala-discriminators
  */
+/*#__NO_SIDE_EFFECTS__*/
 export const isTempKennitala = (kennitala: Kennitala): kennitala is KennitalaTemporary =>
   /^[89]/.test(kennitala);
 
@@ -476,7 +484,7 @@ export function generateKennitala(
 ): KennitalaPerson;
 export function generateKennitala(opts?: GenerateOptions): Kennitala;
 
-// eslint-disable-next-line complexity
+/*#__NO_SIDE_EFFECTS__*/ // eslint-disable-next-line complexity
 export function generateKennitala(opts: GenerateOptions = {}): Kennitala {
   const { random, floor } = Math;
   const isCompany = opts.type === 'company';
