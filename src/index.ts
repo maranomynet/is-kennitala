@@ -249,7 +249,6 @@ export type KennitalaData<
   PossiblyRobot extends boolean = boolean
 > = (KennitalaDataPerson<PossiblyRobot> | KennitalaDataCompany) & { type: KtType };
 
-const magic = [3, 2, 7, 6, 5, 4, 3, 2, 1];
 const robotKtNums = [
   212, 220, 239, 247, 255, 263, 271, 298, 301, 336, 433, 492, 506, 778,
 ];
@@ -359,17 +358,10 @@ export function parseKennitala<
   if (robot && !opts.robot) {
     return;
   }
-  let checkSum = 0;
-  for (let i = 0, len = magic.length; i < len; i++) {
-    checkSum += magic[i]! * Number(value[i]!);
-  }
-  if (checkSum % 11) {
-    return;
-  }
 
   const badDate = !opts.strictDate
     ? // Quickly weed out obviously non-date kennitalas
-      // (Example of one such checksum-valid but nonsensical kennitala: "3368492689")
+      // (Example of one such nonsensical kennitala: "3368492689")
       // Here we trade a few false positives for speed:
       // A value starting with "3102..." (Feb. 31st) might pass
       !/^(?:[012456]\d|[37][01])(?:0\d|1[012]).{5}[890]$/.test(value)
@@ -484,7 +476,7 @@ export function generateKennitala(
 ): KennitalaPerson;
 export function generateKennitala(opts?: GenerateOptions): Kennitala;
 
-/*#__NO_SIDE_EFFECTS__*/ // eslint-disable-next-line complexity
+/*#__NO_SIDE_EFFECTS__*/
 export function generateKennitala(opts: GenerateOptions = {}): Kennitala {
   const { random, floor } = Math;
   const isCompany = opts.type === 'company';
@@ -520,37 +512,12 @@ export function generateKennitala(opts: GenerateOptions = {}): Kennitala {
     String(bDay.getUTCDate() + dateModifier).padStart(2, '0') +
     String(bDay.getUTCMonth() + 1).padStart(2, '0') +
     String(bDay.getUTCFullYear() % 100).padStart(2, '0');
+  const RRR = isCompany
+    ? String(floor(1000 * random())).padStart(3, '0')
+    : String(floor(200 + 800 * random()));
   const C = String(bDay.getUTCFullYear())[1];
 
-  let kt = '';
+  const kt = DDMMYY + RRR + C;
 
-  // Brute-force search for a checksum digit that passes validation.
-  // NOTE: This is slow, but `generateKennitala` is generally not used
-  // in performance-critical code-paths.
-  // Open a GitHub issue if you need a faster implementation.
-  const startTime = process.env.NODE_ENV === 'test' ? Date.now() : 0;
-  while (true as boolean) {
-    let x = 0; // Checksum digit
-    const RR = isCompany
-      ? String(floor(100 * random()))
-      : String(floor(20 + 80 * random()));
-    while (x < 10) {
-      kt = DDMMYY + RR + x + C;
-      if (isValidKennitala(kt, { type: opts.type })) {
-        return kt;
-      }
-      x++;
-    }
-    if (process.env.NODE_ENV === 'test' && Date.now() - startTime > 500) {
-      // This helps the tests catch accidental infinite loops
-      // instead of just hanging in silence.
-      // The `process.env.NODE_ENV` check ensures this part of the code is
-      // tree-shaken away in production builds.
-      throw new Error(
-        'generateKennitala: Failed to find a valid checksum digit ' +
-          'within a reasonable timeframe.'
-      );
-    }
-  }
   return kt as Kennitala;
 }

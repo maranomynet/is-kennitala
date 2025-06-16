@@ -3,6 +3,7 @@
 ## Upcoming...
 
 - ... <!-- Add new lines here. -->
+- feat: Drop 9th digit checksum tests, as Þjóðskrá has stopped using it
 
 ## 1.0.8
 

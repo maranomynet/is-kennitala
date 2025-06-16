@@ -457,10 +457,6 @@ const kt4: KennitalaCompany = generateKennitala({
 const kt6: KennitalaTemporary = generateKennitala({ temporary: true });
 ```
 
-**NOTE:** This method is dumb and slow. It uses brute-force to search for
-valid checksum characters. If you need more speed, please feel free to submit
-a PR with a better implementation.
-
 ---
 
 ## Exported Types

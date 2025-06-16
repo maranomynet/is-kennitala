@@ -29,7 +29,6 @@ const ktCompany = '5001012880';
 const ktCompany2 = '7002691169'; // Litla-Hraun, 30. (!) feb. 1969
 const ktGervi = '0101307789';
 const ktKerfis = '8123456793';
-const ktInvalid1 = '1212657890';
 const ktInvalid2 = '10127552';
 
 const ktPersonImpossible = '3368492689'; // technically valid, but impossible
@@ -202,7 +201,13 @@ describe('parseKennitala', () => {
     expect(parseKennitala(ktCompany)).toMatchObject(dataCompany);
     expect(parseKennitala(ktCompany2)).toMatchObject(dataCompany2);
     expect(parseKennitala(ktGervi)).toBeUndefined();
-    expect(parseKennitala(ktInvalid1)).toBeUndefined();
+    // Does not bother with the old (pre 2026) 9th digit checksum tests
+    expect(parseKennitala('1012755249')).toMatchObject({
+      value: '1012755249' as KennitalaPerson,
+      type: 'person',
+      robot: false,
+      formatted: '101275-5249',
+    });
     expect(parseKennitala(ktInvalid2)).toBeUndefined();
   });
 
@@ -316,7 +321,6 @@ describe('isValidKennitala', () => {
     expect(isValidKennitala(ktPersonAncient)).toBe(true); // accepts 19th century kennitalas
     expect(isValidKennitala(ktCompany)).toBe(true);
     expect(isValidKennitala(ktGervi)).toBe(false);
-    expect(isValidKennitala(ktInvalid1)).toBe(false);
     expect(isValidKennitala(ktInvalid2)).toBe(false);
   });
 
@@ -563,8 +567,6 @@ describe('getKennitalaBirthDate', () => {
     expect(cBDay?.toISOString().substring(0, 10)).toBe('2001-01-10');
     const c2BDay = getKennitalaBirthDate(ktCompany2);
     expect(c2BDay?.toISOString().substring(0, 10)).toBe('1969-03-02'); // There's nothing better we can do about 30. feb. ¯\_(ツ)_/¯
-    const iBDay = getKennitalaBirthDate(ktInvalid1);
-    expect(iBDay?.toISOString().substring(0, 10)).toBe('2065-12-12'); // Kennitalas are not validated
     const i2BDay = getKennitalaBirthDate(kt_Malformed1);
     expect(i2BDay).toBeUndefined(); // Malformed digit-strings return undefined
     const i3BDay = getKennitalaBirthDate('bogus');
@@ -661,7 +663,7 @@ describe('generateKennitala', () => {
   });
 
   test('ignores far-future and ancient-past birthDates as invalid', () => {
-    /** Replaces a Kennitala's random/checksum part with unserscores. */
+    /** Replaces a Kennitala's random part with unserscores. */
     const makeKtStable = (kt: Kennitala) => `${kt.slice(0, 6)}___${kt.slice(-1)}`;
 
     const ktFuture = generateKennitala({ birthDate: new Date('2100-01-01') });
