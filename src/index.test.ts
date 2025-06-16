@@ -584,7 +584,8 @@ describe('getKennitalaBirthDate', () => {
 
 // test generateKennitala
 describe('generateKennitala', () => {
-  {
+  let rounds = 0; // repeat the generate tests to better spot flakiness
+  while (rounds++ < 5) {
     const ktPers: KennitalaPerson = generateKennitala();
     const ktComp: KennitalaCompany = generateKennitala({ type: 'company' });
     const ktRobot: KennitalaPerson = generateKennitala({ robot: true });
@@ -597,6 +598,7 @@ describe('generateKennitala', () => {
       );
     });
     test(`${prefix} generates a different kennitala each time`, () => {
+      // This is slightly flaky, but passes 99.9% of the time. LOL
       expect(ktPers !== generateKennitala()).toBe(true);
     });
     test(`${prefix} basic company`, () => {
